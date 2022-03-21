@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.example</groupId>
+    <artifactId>refleqt-example-api-framework</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <!--MAVEN DEPENDENCIES-->
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.version>3.8.1</maven.compiler.version>
+
+        <!--GSON DEPENDENCIES-->
+        <gson.version>2.8.7</gson.version>
+        <gsonfire.version>1.8.5</gsonfire.version>
+
+        <!--CODEGEN DEPENDENCIES-->
+        <okhttp.version>2.7.5</okhttp.version>
+        <javax-annotation.version>1.2</javax-annotation.version>
+        <swagger-annotations.version>2.1.10</swagger-annotations.version>
+        <jaxb-api.version>2.4.0-b180830.0359</jaxb-api.version>
+
+        <!--ASSERTION DEPENDENCIES-->
+        <assertj.version>3.20.2</assertj.version>
+
+
+        <!--LOGGING DEPENDENCIES-->
+        <logback.version>1.2.5</logback.version>
+        <slf4j.version>1.7.30</slf4j.version>
+
+        <project.default.package>refleqt-example-api-framework.dto</project.default.package>
+        <cucumber.version>7.2.3</cucumber.version>
+        <wagon-maven-plugin.version>2.0.2</wagon-maven-plugin.version>
+        <swagger-codegen-maven-plugin.version>3.0.32</swagger-codegen-maven-plugin.version>
+    </properties>
+
+    <dependencies>
+        <!--CUCUMBER DEPENDENCIES-->
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>${cucumber.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-junit</artifactId>
+            <version>${cucumber.version}</version>
+        </dependency>
+
+        <!--GSON DEPENDENCIES-->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>${gson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.gsonfire</groupId>
+            <artifactId>gson-fire</artifactId>
+            <version>${gsonfire.version}</version>
+        </dependency>
+
+        <!--CODEGEN DEPENDENCIES-->
+        <dependency>
+            <groupId>com.squareup.okhttp</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>${okhttp.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okhttp</groupId>
+            <artifactId>logging-interceptor</artifactId>
+            <version>${okhttp.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+            <version>${javax-annotation.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>${swagger-annotations.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>${jaxb-api.version}</version>
+        </dependency>
+
+        <!--ASSERTION DEPENDENCIES-->
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!--LOGGING DEPENDENCIES-->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>${logback.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.version}</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                    <useIncrementalCompilation>false</useIncrementalCompilation>
+                </configuration>
+            </plugin>
+        <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>wagon-maven-plugin</artifactId>
+            <version>${wagon-maven-plugin.version}</version>
+            <executions>
+                <execution>
+                    <id>download-swagger-json-1</id>
+                    <phase>generate-sources</phase>
+                    <goals>
+                        <goal>download-single</goal>
+                    </goals>
+                    <configuration>
+                        <url>https://petstore.swagger.io/v2/</url>
+                        <fromFile>swagger.json</fromFile>
+                        <toFile>${project.build.directory}/petStore.json</toFile>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+        <plugin>
+            <groupId>io.swagger.codegen.v3</groupId>
+            <artifactId>swagger-codegen-maven-plugin</artifactId>
+            <version>${swagger-codegen-maven-plugin.version}</version>
+            <executions>
+                <execution>
+                    <id>generate-swagger-client</id>
+                    <phase>generate-sources</phase>
+                    <goals>
+                        <goal>generate</goal>
+                    </goals>
+                    <configuration>
+                        <inputSpec>${project.build.directory}/petStore.json</inputSpec>
+                        <language>java</language>
+                        <generateApiTests>false</generateApiTests>
+                        <generateModelTests>false</generateModelTests>
+                        <apiPackage>${project.default.package}.api</apiPackage>
+                        <modelPackage>${project.default.package}.model</modelPackage>
+                        <invokerPackage>${project.default.package}</invokerPackage>
+                        <withXml>true</withXml>
+                        <configOptions>
+                            <dateLibrary>java</dateLibrary>
+                        </configOptions>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+    </plugins>
+    </build>
+</project>
